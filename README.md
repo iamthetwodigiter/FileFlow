@@ -8,6 +8,7 @@
 [![Dart](https://img.shields.io/badge/Dart-3.10.7+-0175C2?logo=dart)](https://dart.dev)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Linux%20%7C%20macOS%20%7C%20Windows-grey)](https://flutter.dev)
+[![Downloads](https://img.shields.io/github/downloads/iamthetwodigiter/FileFlow/total?color=success)](https://github.com/iamthetwodigiter/FileFlow/releases)
 
 *Cross-platform file transfer with TLS encryption and automatic peer discovery.*
 
