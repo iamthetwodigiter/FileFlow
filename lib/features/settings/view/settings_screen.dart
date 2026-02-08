@@ -1,3 +1,4 @@
+import 'package:fileflow/core/constants/app_constants.dart';
 import 'package:fileflow/core/providers/providers.dart';
 import 'package:fileflow/core/theme/app_theme.dart';
 import 'package:fileflow/features/settings/provider/settings_provider.dart';
@@ -208,7 +209,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               "Version",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            subtitle: Text("1.0.0"),
+            subtitle: Text(AppConstants.appVersion),
           ),
         ],
       ),
