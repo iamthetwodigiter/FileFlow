@@ -337,8 +337,8 @@ I had the most fun and learnings coding [CertificateService class](lib/core/serv
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/fileflow.git
-cd fileflow
+git clone https://github.com/iamthetwodigiter/FileFlow.git
+cd FileFlow
 
 # Install dependencies
 flutter pub get
@@ -450,7 +450,7 @@ adb install build/app/outputs/flutter-apk/app-release.apk
 ## 📂 Project Structure
 
 ```
-fileflow/
+FileFlow/
 ├── android/                   # Android native code
 │   └── app/src/main/kotlin/
 │       └── TransferService.kt # Foreground service
