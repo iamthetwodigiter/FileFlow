@@ -103,16 +103,6 @@ class DiscoveryScreen extends ConsumerWidget {
     int port,
     String myName,
   ) {
-    // QR scanning only available on mobile
-    if (!Platform.isAndroid && !Platform.isIOS) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('QR scanning is only available on mobile devices'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
     if (myIp == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("No IP Address found. Connect to Wi-Fi.")),
