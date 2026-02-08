@@ -1,7 +1,10 @@
 package com.thetwodigiter.fileflow
 
+import android.content.Context
 import android.content.Intent
+import android.net.wifi.WifiManager
 import android.os.Build
+import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -9,9 +12,26 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     private val NOTIFICATIONS_CHANNEL = "com.fileflow/notifications"
     private val BACKGROUND_CHANNEL = "com.fileflow/background"
+    private val MULTICAST_CHANNEL = "com.fileflow/multicast"
+    private var multicastLock: WifiManager.MulticastLock? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        // Handle multicast lock for UDP discovery
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, MULTICAST_CHANNEL).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "acquire" -> {
+                    acquireMulticastLock()
+                    result.success(true)
+                }
+                "release" -> {
+                    releaseMulticastLock()
+                    result.success(true)
+                }
+                else -> result.notImplemented()
+            }
+        }
 
         // Handle all notification requests from Flutter
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NOTIFICATIONS_CHANNEL).setMethodCallHandler { call, result ->
@@ -147,5 +167,38 @@ class MainActivity : FlutterActivity() {
             action = TransferService.ACTION_STOP
         }
         startService(intent)
+    }
+
+    private fun acquireMulticastLock() {
+        try {
+            if (multicastLock == null) {
+                val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                multicastLock = wifiManager.createMulticastLock("FileFlowMulticast")
+                multicastLock?.setReferenceCounted(true)
+            }
+            
+            if (multicastLock?.isHeld == false) {
+                multicastLock?.acquire()
+                Log.d("FileFlow", "✅ Multicast lock acquired")
+            }
+        } catch (e: Exception) {
+            Log.e("FileFlow", "❌ Failed to acquire multicast lock: ${e.message}")
+        }
+    }
+
+    private fun releaseMulticastLock() {
+        try {
+            if (multicastLock?.isHeld == true) {
+                multicastLock?.release()
+                Log.d("FileFlow", "✅ Multicast lock released")
+            }
+        } catch (e: Exception) {
+            Log.e("FileFlow", "❌ Failed to release multicast lock: ${e.message}")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        releaseMulticastLock()
     }
 }
