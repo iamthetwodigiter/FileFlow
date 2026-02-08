@@ -217,10 +217,10 @@ Watches peerListProvider
     ↓
 DiscoveryViewModel.init()
     ↓
-DiscoveryRepository.registerService() → mDNS advertises
-DiscoveryRepository.startScanning() → mDNS listens
+DiscoveryRepository.registerService() → Broadcasts via UDP multicast
+DiscoveryRepository.startScanning() → Listens for UDP packets
     ↓
-mDNS finds peers → Stream emits
+Receives UDP broadcasts → Parses device info → Stream emits
     ↓
 ViewModel updates state
     ↓
@@ -565,12 +565,19 @@ testWidgets('Complete file transfer', (tester) async {
 - **Simple**: Generate on-the-fly
 - **Secure enough**: With PIN authentication
 
-### Why mDNS/Bonjour?
+### Why UDP Multicast?
 
-- **Zero-config**: No manual IP entry
-- **Standard**: Works on all platforms
-- **Automatic**: Device discovery just works
-- **LAN-only**: Security by isolation
+- **Cross-platform**: Works uniformly on Android, iOS, Linux, macOS, Windows
+- **Simple**: No platform-specific native code required
+- **Automatic**: Zero-configuration device discovery
+- **LAN-only**: Security by network isolation (multicast doesn't route beyond LAN)
+- **Efficient**: 3-second broadcast interval, 10-second peer timeout
+
+**Technical Details:**
+- Multicast address: `239.255.12.34` (administratively scoped)
+- Port: `26841`
+- Android requires WifiManager.MulticastLock
+- Replaced NSD/mDNS for better Linux compatibility
 
 ---
 

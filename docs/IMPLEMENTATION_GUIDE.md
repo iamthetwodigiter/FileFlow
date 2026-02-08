@@ -525,7 +525,7 @@ All errors trigger `showError(title, message)`:
 ## Summary of Features
 
 ### Connection Requests
-- Peer discovery via mDNS
+- Peer discovery via UDP multicast (cross-platform compatible)
 - Connection acceptance/rejection
 - PIN authentication (optional)
 - Proper state transitions

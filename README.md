@@ -45,7 +45,7 @@ FileFlow is a peer-to-peer file transfer application for local networks. Built w
 **Key Benefits:**
 - No cloud storage or third-party servers
 - TLS encryption with RSA-2048 + SHA-256
-- Automatic peer discovery via mDNS
+- Automatic peer discovery via UDP multicast
 - Cross-platform (Android, iOS, Linux, macOS, Windows)
 - State persistence and transfer resume
 
@@ -56,10 +56,12 @@ FileFlow is a peer-to-peer file transfer application for local networks. Built w
 ### Core Capabilities
 
 #### 🔍 **Automatic Peer Discovery**
-- **mDNS/Bonjour Integration**: Zero-configuration network discovery using the `_fileflow._tcp` service type
-- **Real-Time Updates**: Live peer list updates as devices join or leave the network
-- **Device Metadata**: Display device name, model, OS, version, and PIN requirement status
+- **UDP Multicast Discovery**: Zero-configuration network discovery on multicast group 239.255.12.34:26841
+- **Cross-Platform Compatible**: Works seamlessly across Android, iOS, Linux, macOS, and Windows
+- **Real-Time Updates**: Live peer list updates as devices join or leave the network (10-second timeout)
+- **Device Metadata**: Broadcast and receive device name, model, OS, version, and PIN requirement status
 - **Smart Filtering**: Automatically excludes self from peer list to prevent self-connections
+- **Peer Timeout**: Stale peers automatically removed after 10 seconds of inactivity
 
 #### 🔐 **Advanced Security**
 - **TLS Encryption**: All data transmitted over encrypted TLS 1.3 channels
@@ -126,7 +128,7 @@ lib/
 ├── features/                  # Feature modules
 │   ├── discovery/            # Peer discovery
 │   │   ├── model/           # Peer data model
-│   │   ├── repository/      # mDNS service discovery
+│   │   ├── repository/      # UDP multicast discovery
 │   │   ├── viewmodel/       # Business logic
 │   │   └── view/            # UI components
 │   │
@@ -147,7 +149,7 @@ lib/
 
 #### **1. Repository Pattern**
 Abstracts data sources (network, database, file system) behind clean interfaces:
-- `DiscoveryRepository`: Manages mDNS service registration and discovery
+- `DiscoveryRepository`: Manages UDP multicast broadcasting and peer discovery
 - `ConnectionRepository`: Handles socket connections and data transfer
 - `HistoryRepository`: Persists transfer history with Hive
 - `SettingsRepository`: Manages app preferences
@@ -291,7 +293,7 @@ I had the most fun and learnings coding [CertificateService class](lib/core/serv
 **Scenario**: Traditional P2P apps require manual IP entry, port forwarding, and firewall rules.
 
 **FileFlow Solution**:
-- **mDNS/Bonjour**: Automatic peer discovery without configuration
+- **UDP Multicast**: Automatic peer discovery without configuration, cross-platform compatible
 - **Single Port**: Uses port 4000 with no port forwarding needed (LAN)
 - **QR Code**: Scan to connect without typing IP addresses
 
@@ -395,7 +397,7 @@ adb install build/app/outputs/flutter-apk/app-release.apk
 
 #### 1. **Start Discovery**
    - Open FileFlow on both devices
-   - App automatically advertises itself via mDNS
+   - App automatically broadcasts presence via UDP multicast every 3 seconds
    - Peer list populates with nearby devices
 
 #### 2. **Connect to Peer**
@@ -531,7 +533,7 @@ fileflow/
 |---------|---------|---------|
 | `flutter_riverpod` | ^3.2.0 | State management |
 | `hive_flutter` | ^1.1.0 | Local database |
-| `nsd` | ^4.1.0 | mDNS/Bonjour discovery |
+| ~~`nsd`~~ | ~~^4.1.0~~ | ~~Removed~~ (migrated to UDP multicast for Linux support) |
 | `pointycastle` | ^4.0.0 | Cryptography (RSA, SHA-256) |
 | `shelf` | ^1.4.2 | HTTP server (for QR endpoints) |
 | `file_picker` | ^10.3.10 | File selection |
@@ -564,7 +566,7 @@ fileflow/
 | **Linux** | ℹ️ To be Tested Soon | Ubuntu 20.04+ |
 | **macOS** | ℹ️ To be Tested Soon | macOS 10.14+ |
 | **Windows** | ℹ️ To be Tested Soon | Windows 10+ |
-| **Web** | ⚠️ Limited | mDNS not supported in browsers |
+| **Web** | ⚠️ Limited | UDP multicast not supported in browsers |
 
 ### Platform-Specific Features
 
@@ -698,7 +700,7 @@ chore: Build process or tooling changes
 
 - **Flutter Team**: For the amazing cross-platform framework
 - **Pointy Castle**: For pure-Dart cryptography implementation
-- **NSD Package**: For seamless mDNS/Bonjour integration
+- **Flutter Community**: For comprehensive cross-platform support and packages
 - **Riverpod**: For elegant state management
 - **Open Source Community**: For countless libraries and inspiration
 

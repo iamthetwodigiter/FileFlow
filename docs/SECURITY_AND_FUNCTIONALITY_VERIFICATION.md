@@ -59,7 +59,8 @@
 **Implementation:** lib/features/transfer/repository/connection_repository.dart
 
 **Features:**
-- Device ID verification via mDNS discovery
+- Device ID verification via UDP multicast discovery
+- Unique device ID prevents self-connection
 - IP and port validation
 - Connection state tracking
 - Automatic disconnection on socket error
@@ -352,7 +353,7 @@ Optional: Add file payload encryption on top of TLS:
 - ✓ TLS encryption for all transfers
 - ✓ Self-signed certificates prevent passive eavesdropping
 - ✓ Optional PIN authentication for additional security
-- ✓ Device identification via mDNS discovery
+- ✓ Device identification via UDP multicast broadcast
 - ✓ Proper error handling and resource cleanup
 - ✓ No external server involvement (completely local)
 - ✓ Peer device name verification
@@ -361,7 +362,7 @@ Optional: Add file payload encryption on top of TLS:
 
 - Network is trusted (LAN only)
 - No active attacker on the same network
-- Devices properly identified via mDNS
+- Devices properly identified via UDP multicast broadcasts
 - PIN is not transmitted in plaintext (sent over TLS)
 
 ### Threat Model Protection
@@ -370,7 +371,7 @@ Optional: Add file payload encryption on top of TLS:
 - ✓ MITM (active): Protected by TLS + certificate
 - ✓ Unauthorized Access: Protected by PIN (optional)
 - ✓ File Corruption: Protected by transfer validation
-- ✓ Device Spoofing: Protected by mDNS device identity
+- ✓ Device Spoofing: Protected by unique device ID in UDP broadcasts + TLS certificate verification
 
 ### Recommended Usage
 

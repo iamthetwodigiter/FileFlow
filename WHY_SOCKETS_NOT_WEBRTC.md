@@ -3,7 +3,7 @@
 FileFlow uses **SecureSocket** (TLS over TCP) for the following reasons:
 
 ### 1. **LAN-Only Scope**
-The app is designed for **local network transfers only** using mDNS/Bonjour for peer discovery. Devices must be on the same network, so there's no need for NAT traversal or STUN/TURN servers that WebRTC provides.
+The app is designed for **local network transfers only** using UDP multicast for peer discovery. Devices must be on the same network, so there's no need for NAT traversal or STUN/TURN servers that WebRTC provides.
 
 ### 2. **Simplicity**
 - Direct socket connections are simpler to implement and debug
