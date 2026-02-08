@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -5,6 +6,8 @@ class BackgroundTransferService {
   static const platform = MethodChannel('com.fileflow/background');
 
   Future<void> startForegroundService(String fileName) async {
+    // Only Android has foreground service support
+    if (!Platform.isAndroid) return;
     try {
       await platform.invokeMethod('startService', {'fileName': fileName});
     } catch (e) {
@@ -13,6 +16,8 @@ class BackgroundTransferService {
   }
 
   Future<void> startConnectionService(String deviceName) async {
+    // Only Android has foreground service support
+    if (!Platform.isAndroid) return;
     try {
       await platform.invokeMethod('startConnectionService', {'deviceName': deviceName});
     } catch (e) {
@@ -21,6 +26,8 @@ class BackgroundTransferService {
   }
 
   Future<void> updateProgress(String fileName, int progress) async {
+    // Only Android has foreground service support
+    if (!Platform.isAndroid) return;
     try {
       await platform.invokeMethod('updateProgress', {
         'fileName': fileName,
@@ -32,6 +39,8 @@ class BackgroundTransferService {
   }
 
   Future<void> stopForegroundService() async {
+    // Only Android has foreground service support
+    if (!Platform.isAndroid) return;
     try {
       await platform.invokeMethod('stopService');
     } catch (e) {

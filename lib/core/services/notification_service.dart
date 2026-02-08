@@ -1,11 +1,18 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class NotificationService {
   static const platform = MethodChannel('com.fileflow/notifications');
 
+  // Helper to check if platform supports notifications
+  bool _supportsNotifications() {
+    return Platform.isAndroid || Platform.isIOS || Platform.isMacOS;
+  }
+
   // Show connection established notification
   Future<void> showConnectionEstablished(String deviceName) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showConnectionEstablished', {
         'deviceName': deviceName,
@@ -17,6 +24,7 @@ class NotificationService {
 
   // Show connection request notification
   Future<void> showConnectionRequest(String deviceName) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showConnectionRequest', {
         'deviceName': deviceName,
@@ -28,6 +36,7 @@ class NotificationService {
 
   // Show connection rejected notification
   Future<void> showConnectionRejected(String deviceName, {String? reason}) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showConnectionRejected', {
         'deviceName': deviceName,
@@ -44,6 +53,7 @@ class NotificationService {
     String fileName,
     int fileSize,
   ) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showTransferRequest', {
         'deviceName': deviceName,
@@ -57,6 +67,7 @@ class NotificationService {
 
   // Show transfer started notification
   Future<void> showTransferStarted(String fileName, {bool isSending = false}) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showTransferStarted', {
         'fileName': fileName,
@@ -74,6 +85,7 @@ class NotificationService {
     double speedMBps,
     {bool isSending = false}
   ) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('updateTransferProgress', {
         'fileName': fileName,
@@ -88,6 +100,7 @@ class NotificationService {
 
   // Show transfer paused notification
   Future<void> showTransferPaused(String fileName) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showTransferPaused', {
         'fileName': fileName,
@@ -99,6 +112,7 @@ class NotificationService {
 
   // Show transfer resumed notification
   Future<void> showTransferResumed(String fileName) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showTransferResumed', {
         'fileName': fileName,
@@ -114,6 +128,7 @@ class NotificationService {
     int fileSize, {
     bool isSending = false,
   }) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showTransferCompleted', {
         'fileName': fileName,
@@ -127,6 +142,7 @@ class NotificationService {
 
   // Show transfer cancelled notification
   Future<void> showTransferCancelled(String fileName, {String? reason}) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showTransferCancelled', {
         'fileName': fileName,
@@ -139,6 +155,7 @@ class NotificationService {
 
   // Show error notification
   Future<void> showError(String title, String message) async {
+    if (!_supportsNotifications()) return;
     try {
       await platform.invokeMethod('showError', {
         'title': title,
