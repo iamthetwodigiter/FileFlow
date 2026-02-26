@@ -1,5 +1,5 @@
 import 'package:fileflow/features/settings/repository/settings_repository.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SettingsState {
   final String? deviceName;

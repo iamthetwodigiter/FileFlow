@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class BackgroundTransferService {
-  static const platform = MethodChannel('com.fileflow/background');
+  static const platform = MethodChannel('app.fileflow/background');
 
   Future<void> startForegroundService(String fileName) async {
     // Only Android has foreground service support

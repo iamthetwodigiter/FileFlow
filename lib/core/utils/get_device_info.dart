@@ -45,7 +45,7 @@ class GetDeviceInfo {
           "id": linuxInfo.machineId,
           "name": linuxInfo.name,
           "model": linuxInfo.prettyName,
-          "version": linuxInfo.version,
+          "version": linuxInfo.version ?? linuxInfo.idLike?.first,
           "os": "Linux",
         });
       } else if (Platform.isMacOS) {

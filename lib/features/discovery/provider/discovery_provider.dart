@@ -4,7 +4,6 @@ import 'package:fileflow/features/discovery/repository/discovery_repository.dart
 import 'package:fileflow/features/discovery/viewmodel/discovery_viewmodel.dart';
 import 'package:fileflow/features/settings/provider/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 
 final discoveryRepositoryProvider = Provider((ref) => DiscoveryRepository());
 

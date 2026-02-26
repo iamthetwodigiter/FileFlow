@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 class DiscoveryRepository {
   static const Duration broadcastInterval = Duration(seconds: 3);
   static const Duration peerTimeout = Duration(seconds: 10);
-  static const _multicastChannel = MethodChannel('com.fileflow/multicast');
+  static const _multicastChannel = MethodChannel('app.fileflow/multicast');
 
   RawDatagramSocket? _broadcastSocket;
   RawDatagramSocket? _listenSocket;

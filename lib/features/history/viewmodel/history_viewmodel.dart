@@ -1,6 +1,6 @@
 import 'package:fileflow/features/history/model/history_item.dart';
 import 'package:fileflow/features/history/repository/history_repository.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HistoryViewModel extends StateNotifier<List<HistoryItem>> {
   final HistoryRepository _repo;

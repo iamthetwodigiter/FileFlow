@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class NotificationService {
-  static const platform = MethodChannel('com.fileflow/notifications');
+  static const platform = MethodChannel('app.fileflow/notifications');
 
   // Helper to check if platform supports notifications
   bool _supportsNotifications() {

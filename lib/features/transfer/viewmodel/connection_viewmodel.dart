@@ -9,8 +9,8 @@ import 'package:fileflow/features/transfer/model/transfer_event.dart';
 import 'package:fileflow/features/transfer/repository/connection_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:fileflow/features/transfer/model/transfer_item.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum ConnectionStatus {
   disconnected,

@@ -4,7 +4,7 @@ import 'package:fileflow/core/models/device_info.dart';
 import 'package:fileflow/features/discovery/model/peer.dart';
 import 'package:fileflow/features/discovery/repository/discovery_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 class DiscoveryViewmodel extends StateNotifier<List<Peer>> {
