@@ -5,6 +5,7 @@ import 'package:fileflow/features/settings/provider/settings_provider.dart';
 import 'package:fileflow/features/transfer/provider/transfer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -71,6 +72,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ],
     ),
   );
+
+  void _launchURL(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,13 +210,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
           const Divider(),
           _sectionHeader("About"),
-          const ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text(
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text(
               "Version",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             subtitle: Text(AppConstants.appVersion),
+          ),
+          ListTile(
+            leading: const Icon(Icons.code_rounded),
+            title: const Text(
+              "GitHub",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            subtitle: const Text("Check out my GitHub Profile"),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              _launchURL(AppConstants.githubURL);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.language_rounded),
+            title: const Text(
+              "Portfolio",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            subtitle: const Text("Check out my Portfolio"),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              _launchURL(AppConstants.portfolioURL);
+            },
           ),
         ],
       ),

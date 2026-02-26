@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 
 class AppConstants {
@@ -22,5 +21,12 @@ class AppConstants {
             .then((dir) => '${dir.path}/FileFlow/')
             .toString();
 
+  static final String configDir = Platform.isLinux
+      ? '~/.config/fileflow/'
+      : appDir;
+
   static const String appVersion = '1.1.0';
+
+  static const String githubURL = 'https://github.com/iamthetwodigiter/FileFlow';
+  static const String portfolioURL = 'https://www.thetwodigiter.app';
 }
