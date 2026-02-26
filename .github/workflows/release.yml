@@ -163,11 +163,13 @@ jobs:
           flutter build ipa --release --no-codesign
           VERSION=$(grep "^version:" pubspec.yaml | awk '{print $2}')
           mkdir -p release-artifacts
-          # Since it's unsigned, we zip the .xcarchive or describe that it needs signing
-          # However, for convenience, we can try to find the .app and zip it
-          cd build/ios/archive/Runner.xcarchive/Products/Applications
-          zip -r ../../../../../release-artifacts/FileFlow-v${VERSION}-ios.zip Runner.app
-          cd ../../../../../
+          APP_PATH=$(find "$GITHUB_WORKSPACE/build/ios/archive/Runner.xcarchive/Products/Applications" -maxdepth 1 -name "*.app" -print -quit)
+          if [ -z "$APP_PATH" ]; then
+            echo "No .app bundle found in archive output."
+            ls -la "$GITHUB_WORKSPACE/build/ios/archive/Runner.xcarchive/Products/Applications" || true
+            exit 1
+          fi
+          (cd "$(dirname "$APP_PATH")" && zip -r "$GITHUB_WORKSPACE/release-artifacts/FileFlow-v${VERSION}-ios.zip" "$(basename "$APP_PATH")")
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v1
