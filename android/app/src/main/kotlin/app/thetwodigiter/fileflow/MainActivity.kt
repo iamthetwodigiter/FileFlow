@@ -1,4 +1,4 @@
-package com.thetwodigiter.fileflow
+package app.thetwodigiter.fileflow
 
 import android.content.Context
 import android.content.Intent
@@ -10,9 +10,9 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val NOTIFICATIONS_CHANNEL = "com.fileflow/notifications"
-    private val BACKGROUND_CHANNEL = "com.fileflow/background"
-    private val MULTICAST_CHANNEL = "com.fileflow/multicast"
+    private val NOTIFICATIONS_CHANNEL = "app.fileflow/notifications"
+    private val BACKGROUND_CHANNEL = "app.fileflow/background"
+    private val MULTICAST_CHANNEL = "app.fileflow/multicast"
     private var multicastLock: WifiManager.MulticastLock? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

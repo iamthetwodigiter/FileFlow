@@ -4,7 +4,7 @@ import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
-  private let NOTIFICATIONS_CHANNEL = "com.fileflow/notifications"
+  private let NOTIFICATIONS_CHANNEL = "app.fileflow/notifications"
   
   override func application(
     _ application: UIApplication,

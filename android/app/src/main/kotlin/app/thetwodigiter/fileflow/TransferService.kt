@@ -1,4 +1,4 @@
-package com.thetwodigiter.fileflow
+package app.thetwodigiter.fileflow
 
 import android.app.Notification
 import android.app.NotificationChannel

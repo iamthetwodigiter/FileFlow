@@ -4,7 +4,7 @@ import UserNotifications
 
 @main
 class AppDelegate: FlutterAppDelegate {
-  private let NOTIFICATIONS_CHANNEL = "com.fileflow/notifications"
+  private let NOTIFICATIONS_CHANNEL = "app.fileflow/notifications"
   
   override func applicationDidFinishLaunching(_ notification: Notification) {
     // Request notification permissions
