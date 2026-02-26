@@ -1,0 +1,195 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Tag to upload artifacts to'
+        required: true
+        default: 'v1.1.1'
+
+jobs:
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK (Split per ABI)
+        run: flutter build apk --release --split-per-abi
+      
+      - name: Build APK (Universal)
+        run: flutter build apk --release
+
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+
+      - name: Prepare Artifacts
+        run: |
+          VERSION=$(grep "^version:" pubspec.yaml | awk '{print $2}')
+          mkdir -p release-artifacts
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release-artifacts/FileFlow-v${VERSION}-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release-artifacts/FileFlow-v${VERSION}-arm64-v8a.apk
+          cp build/app/outputs/flutter-apk/app-x86_64-release.apk release-artifacts/FileFlow-v${VERSION}-x86_64.apk
+          cp build/app/outputs/flutter-apk/app-release.apk release-artifacts/FileFlow-v${VERSION}-universal.apk
+          cp build/app/outputs/bundle/release/app-release.aab release-artifacts/FileFlow-v${VERSION}.aab
+
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: release-artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev alien
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Linux Packages
+        run: |
+          chmod +x build_linux_packages.sh
+          ./build_linux_packages.sh
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: build/linux-packages/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build macOS app
+        run: flutter build macos --release
+
+      - name: Create DMG
+        run: |
+          sudo gem install brew-pip
+          brew install create-dmg
+          VERSION=$(grep "^version:" pubspec.yaml | awk '{print $2}')
+          mkdir -p release-artifacts
+          create-dmg \
+            --volname "FileFlow $VERSION" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --icon "FileFlow.app" 200 190 \
+            --hide-extension "FileFlow.app" \
+            --app-drop-link 600 185 \
+            "release-artifacts/FileFlow-v${VERSION}-macos-x64.dmg" \
+            "build/macos/Build/Products/Release/fileflow.app"
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: release-artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build iOS IPA (Unsigned)
+        run: |
+          flutter build ipa --release --no-codesign
+          VERSION=$(grep "^version:" pubspec.yaml | awk '{print $2}')
+          mkdir -p release-artifacts
+          # Since it's unsigned, we zip the .xcarchive or describe that it needs signing
+          # However, for convenience, we can try to find the .app and zip it
+          cd build/ios/archive/Runner.xcarchive/Products/Applications
+          zip -r ../../../../../release-artifacts/FileFlow-v${VERSION}-ios.zip Runner.app
+          cd ../../../../../
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: release-artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Prepare Artifacts
+        shell: pwsh
+        run: |
+          $version = Select-String -Path pubspec.yaml -Pattern "^version: (.+)" | ForEach-Object { $_.Matches.Value.Split(": ")[1] }
+          New-Item -ItemType Directory -Force -Path release-artifacts
+          Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath "release-artifacts/FileFlow-v$version-windows-x64.zip"
+
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: release-artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
