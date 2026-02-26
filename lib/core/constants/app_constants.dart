@@ -25,7 +25,7 @@ class AppConstants {
       ? '~/.config/fileflow/'
       : appDir;
 
-  static const String appVersion = '1.1.0';
+  static const String appVersion = '1.1.1';
 
   static const String githubURL = 'https://github.com/iamthetwodigiter/FileFlow';
   static const String portfolioURL = 'https://www.thetwodigiter.app';
