@@ -56,7 +56,7 @@ jobs:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
           files: release-artifacts/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
   build-linux:
     name: Build Linux
@@ -92,7 +92,7 @@ jobs:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
           files: build/linux-packages/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
   build-macos:
     name: Build macOS
@@ -139,7 +139,7 @@ jobs:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
           files: release-artifacts/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
   build-ios:
     name: Build iOS
@@ -176,7 +176,7 @@ jobs:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
           files: release-artifacts/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
   build-windows:
     name: Build Windows
@@ -213,4 +213,4 @@ jobs:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
           files: release-artifacts/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
