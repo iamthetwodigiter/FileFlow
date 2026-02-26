@@ -25,6 +25,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Generate Icons
+        run: flutter pub run flutter_launcher_icons
+
+
       - name: Build APK (Split per ABI)
         run: flutter build apk --release --split-per-abi
       
@@ -72,6 +76,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Generate Icons
+        run: flutter pub run flutter_launcher_icons
+
+
       - name: Build Linux Packages
         run: |
           chmod +x build_linux_packages.sh
@@ -99,6 +107,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Generate Icons
+        run: flutter pub run flutter_launcher_icons
+
+
       - name: Build macOS app
         run: flutter build macos --release
 
@@ -118,6 +130,7 @@ jobs:
             --app-drop-link 600 185 \
             "release-artifacts/FileFlow-v${VERSION}-macos-x64.dmg" \
             "build/macos/Build/Products/Release/fileflow.app"
+
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v1
@@ -140,6 +153,10 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Generate Icons
+        run: flutter pub run flutter_launcher_icons
+
 
       - name: Build iOS IPA (Unsigned)
         run: |
@@ -173,6 +190,10 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Generate Icons
+        run: flutter pub run flutter_launcher_icons
+
 
       - name: Build Windows
         run: flutter build windows --release
